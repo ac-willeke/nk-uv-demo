@@ -1,0 +1,14 @@
+# Basic Python .gitignore 
+# Tip: for a more comprehensive .gitignore see GitHubs Python.gitignore
+# > https://github.com/github/gitignore/blob/main/Python.gitignore
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
