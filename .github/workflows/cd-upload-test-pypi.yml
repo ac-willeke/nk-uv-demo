@@ -14,7 +14,7 @@ on:
       environment:
         description: Environment to deploy to (TestPyPI only for demo repo)
         required: true
-        default: test-pypi
+        default: testpypi
         type: choice
         options:
         - testpypi
@@ -40,7 +40,7 @@ jobs:
     needs: build-and-inspect-package
     runs-on: ubuntu-latest
     environment:
-      name: test-pypi
+      name: testpypi
       url: https://test.pypi.org/p/nk-uv-demo/
     permissions:
       # IMPORTANT: this permission is mandatory for trusted publishing, but
