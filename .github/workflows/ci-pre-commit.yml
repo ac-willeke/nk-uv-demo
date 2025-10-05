@@ -1,0 +1,19 @@
+# https://github.com/marketplace/actions/pre-commit-uv
+name: Code Quality | pre-commit
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - uses: tox-dev/action-pre-commit-uv@v1

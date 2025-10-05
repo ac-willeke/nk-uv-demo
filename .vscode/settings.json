@@ -1,0 +1,69 @@
+{
+    // Python interpreter and tools
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python",
+    "mypy-type-checker.interpreter": [
+        "${workspaceFolder}/.venv/Scripts/python"
+    ],
+    "ruff.interpreter": [
+        "${workspaceFolder}/.venv/Scripts/python"
+    ],
+
+    // Formatting
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "notebook.formatOnSave.enabled": true,
+    "ruff.format.preview": false,
+    "ruff.organizeImports": true,
+
+    // Editor rulers
+    "editor.rulers": [
+        { "column": 78, "color": "#737171" },
+        { "column": 88, "color": "#2affa3" }
+    ],
+
+    // Python analysis and debugging
+    "python.analysis.autoImportCompletions": true,
+    "debugpy.showPythonInlineValues": true,
+    "github.copilot.enable": {
+        "scminput": true
+    },
+
+    // Copilot
+    "python.analysis.addHoverSummaries": true,
+    "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+    "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+    "github.copilot.chat.generateTests.codeLens": true,
+    "github.copilot.chat.edits.temporalContext.enabled": true,
+    "github.copilot.chat.editor.temporalContext.enabled": true,
+    "github.copilot.advanced": {
+        "length": 500,       // maximum length of generated responses
+        "temperature": 0.1  // most conservative answers
+    },
+    "github.copilot.chat.followUp": "always",
+    "github.copilot.chat.codeActions": true,
+    "github.copilot.editor.enableAutoCompletions": true,
+
+    // Color customizations
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#0C3423",
+        "titleBar.activeBackground": "#114931",
+        "titleBar.activeForeground": "#F4FDF9"
+    },
+
+    // Python formatting and testing
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "python.analysis.extraPaths": [],
+    "python.docstring.format": "numpy",
+    // "databricks.lastActiveConnection": "Databricks Extension",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.cwd": "${workspaceFolder}",
+    "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
+    "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------"
+
+}
