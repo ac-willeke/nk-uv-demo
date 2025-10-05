@@ -1,0 +1,51 @@
+# .github/workflows/security.yml
+# Safety Action: Scan for known vulnerabilities in Python dependencies
+# SAFETY_API_KEY is optional, but recommended for more comprehensive checks
+# Set in the GitHub Repo: Settings > Secrets > Actions > New repository secret
+# https://docs.safetycli.com/safety-docs/installation/securing-git-repositories/github/github-actions
+name: Security Scan
+
+on:
+  push:
+    branches:
+    - '**'
+    - '!main'   # already scanned on PR to main
+  pull_request:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 2 * * 1      # Weekly on Mondays at 2 AM UTC
+
+jobs:
+  safety-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write  # For SARIF upload
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    - name: Install dependencies
+      run: uv sync --all-groups
+
+    - name: Run Safety scan
+      run: uv run safety scan --json --output safety-report.json
+      env:
+        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+      continue-on-error: true  # Don't fail the workflow, just report
+
+    - name: Upload Safety report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: safety-report
+        path: safety-report.json
+        retention-days: 30
