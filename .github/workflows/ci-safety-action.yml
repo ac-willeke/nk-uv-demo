@@ -36,10 +36,16 @@ jobs:
     - name: Install dependencies
       run: uv sync --all-groups
 
-    - name: Run Safety scan
+    - name: Run Safety scan (with API key)
+      if: ${{ secrets.SAFETY_API_KEY != '' }}
       run: uv run safety scan --save-as json safety-report.json
       env:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+      continue-on-error: true  # Don't fail the workflow, just report
+
+    - name: Run Safety scan (development mode, if API key not available)
+      if: ${{ secrets.SAFETY_API_KEY == '' }}
+      run: uv run safety --stage development scan --save-as json safety-report.json
       continue-on-error: true  # Don't fail the workflow, just report
 
     - name: Upload Safety report
