@@ -227,6 +227,9 @@ ls dist/
 
 1. **Create a release** on GitHub:
    ```bash
+   # List latests tag
+   git tag --list
+
    # Tag a version and push
    git tag v0.1.0
    git push origin v0.1.0
