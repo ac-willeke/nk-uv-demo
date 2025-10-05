@@ -3,7 +3,7 @@
 # SAFETY_API_KEY is optional, but recommended for more comprehensive checks
 # Set in the GitHub Repo: Settings > Secrets > Actions > New repository secret
 # https://docs.safetycli.com/safety-docs/installation/securing-git-repositories/github/github-actions
-name: Security Scan
+name: Security | Safety Scan
 
 on:
   workflow_dispatch:

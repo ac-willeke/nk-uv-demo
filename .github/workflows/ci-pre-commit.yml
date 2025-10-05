@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/pre-commit-uv
-name: pre-commit
+name: Code Quality | pre-commit
 
 on:
   push:
