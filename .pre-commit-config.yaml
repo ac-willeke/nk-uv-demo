@@ -9,7 +9,7 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v6.0.0
   hooks:
-      # File Validation
+  # File Validation
   - id: check-added-large-files
   - id: check-json
     exclude: \.vscode/.*|\.devcontainer/.*
@@ -18,13 +18,11 @@ repos:
   - id: check-xml
   - id: end-of-file-fixer
   - id: trailing-whitespace
-  - id: file-contents-sorter
-    args: [--unique]
-      # Code Quality
+  # Code Quality
   - id: check-case-conflict
   - id: check-builtin-literals
   - id: check-docstring-first
-      # Security
+  # Security
   - id: detect-private-key
 
   # File validation
@@ -34,6 +32,7 @@ repos:
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
+    exclude: ^pyproject\.toml$
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 

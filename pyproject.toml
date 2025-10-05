@@ -1,6 +1,17 @@
-[build-system]
-build-backend = "setuptools.build_meta"
-requires = ["setuptools>=61"]
+[project]
+name = "nk-uv-demo"
+description = "Demo package for Naturkart project demonstrating Python best practices."
+license = "MIT"
+readme = "README.md"
+authors = [
+  {name = "wilaca", email = "willeke.acampo@miljodir.no"}
+]
+requires-python = ">=3.12"
+dependencies = []
+dynamic = ["version"]
+
+[project.scripts]
+nk-uv-demo = "nk_uv_demo:main"
 
 [dependency-groups]
 dev = [
@@ -13,23 +24,22 @@ dev = [
   "pytest-cov>=7.0.0",
   "ruff>=0.13.3",
   "safety>=3.6.2",
-  "zizmor>=1.14.2"
+  "setuptools-scm>=9.2.0",
+  "zizmor>=1.14.2",
 ]
 
-[project]
-authors = [
-  {name = "wilaca", email = "willeke.acampo@miljodir.no"}
-]
-dependencies = []
-description = "Demo package for Naturkart project demonstrating Python best practices."
-license = "MIT"
-name = "nk-uv-demo"
-readme = "README.md"
-requires-python = ">=3.12"
-version = "0.1.0"
+[build-system]
+requires = ["setuptools>=61", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
-[project.scripts]
-nk-uv-demo = "nk_uv_demo:main"
+[tool.setuptools.packages.find]
+where =["src"]
+include = ["nk_uv_demo*"]
+
+# SETUPTOOLS-SCM config (dynamic versioning)
+[tool.setuptools_scm]
+write_to = "src/nk_uv_demo/_version.py"
+fallback_version = "0.0.0"
 
 # DEPTRY config
 [tool.deptry]
@@ -39,57 +49,60 @@ known_first_party = ["nk_uv_demo"]  # ignore local package
 [tool.pytest]
 
 [tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "ci_exclude: Tests excluded from CI/CD pipeline"
+]
 addopts = [
   "--cov=src",
   "--cov-report=term",
   "--cov-report=xml:coverage.xml"
 ]
-markers = [
-  "ci_exclude: Tests excluded from CI/CD pipeline"
-]
-pythonpath = ["."]
-testpaths = ["tests"]
 
-# RUFF rules
+# RUFF Rules
 [tool.ruff]
 exclude = [
-  "dump",
-  "tmp"
+    "dump",
+    "tmp",
 ]
+
 line-length = 88
 target-version = "py311"
 
-[tool.ruff.format]
-docstring-code-format = true
-indent-style = "space"
-
 [tool.ruff.lint]
-ignore = [
-  "D107",  # pydocstyle: Missing docstring in __init__
-  "D213",  # pydocstyle: Multi-line summary should start at the second line
-  "E501",  # pycodestyle: Line too long
-  "F401",  # pyflakes: Module imported but unused
-  "D417",  # pydocstyle: Missing argument descriptions in docstrings
-  "ERA001"  # eradicate: Commented out code
-]
 select = [
-  "E4",  # pycodestyle: indentation errors
-  "E7",  # pycodestyle: statements and control flow
-  "E9",  # pycodestyle: runtime errors
-  "F",  # pyflakes: code correctness
-  "B",  # flake8-bugbear: likely bugs and design problems
-  "ERA",  # eradicate: commented-out code
-  "D",  # pydocstyle: docstring conventions
-  "D417",  # pydocstyle: missing argument descriptions in docstrings
-  "N"  # pep8-naming: naming conventions
+    "E4",    # pycodestyle: indentation errors
+    "E7",    # pycodestyle: statements and control flow
+    "E9",    # pycodestyle: runtime errors
+    "F",     # pyflakes: code correctness
+    "B",     # flake8-bugbear: likely bugs and design problems
+    "ERA",   # eradicate: commented-out code
+    "D",     # pydocstyle: docstring conventions
+    "D417",  # pydocstyle: missing argument descriptions in docstrings
+    "N"      # pep8-naming: naming conventions
 ]
+
+ignore = [
+    "D107",   # pydocstyle: Missing docstring in __init__
+    "D213",   # pydocstyle: Multi-line summary should start at the second line
+    "E501",   # pycodestyle: Line too long
+    "F401",   # pyflakes: Module imported but unused
+    "D417",   # pydocstyle: Missing argument descriptions in docstrings
+    "ERA001"  # eradicate: Commented out code
+]
+
 unfixable = [
-  "B"  # flake8-bugbear
+    "B"   # flake8-bugbear
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
-"__init__.py" = ["E402", "D104"]  # pycodestyle: module level import not at top of file
+"__init__.py" = ["E402", "D104"]     # pycodestyle: module level import not at top of file
 "tests/*.py" = ["D100", "D101", "D102", "D103", "D104", "D105", "D106"]  # Ignore docstring checks in tests
+
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"

@@ -113,6 +113,18 @@ zizmor .github/workflows/  # Audit GitHub Actions workflows
 pre-commit install        # Install git hooks (one-time setup)
 pre-commit run --all-files  # Run all hooks on all files
 pre-commit run --files <file1> <file2>  # Run hooks on specific files
+
+# Dynamic versioning - setuptools-scm
+# Development
+git commit -m "Add feature"  # → 1.0.1.dev1+g123abc
+git commit -m "Fix bug"      # → 1.0.1.dev2+g456def
+
+# Release
+git tag v1.1.0              # → 1.1.0 (clean release)
+git push --tags
+
+# Continue development
+git commit -m "New feature"  # → 1.1.1.dev1+g789ghi
 ```
 
 #### Quality Gates
