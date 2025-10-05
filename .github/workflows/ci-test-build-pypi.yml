@@ -1,4 +1,4 @@
-name: Test Build Only
+name: Publish | Test Build Only
 
 on:
   workflow_dispatch:
