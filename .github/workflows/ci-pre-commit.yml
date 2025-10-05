@@ -17,5 +17,3 @@ jobs:
       with:
         persist-credentials: false
     - uses: tox-dev/action-pre-commit-uv@v1
-      with:
-        python-version: '3.12'
