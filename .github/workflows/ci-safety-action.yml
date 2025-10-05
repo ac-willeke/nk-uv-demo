@@ -37,14 +37,7 @@ jobs:
       run: uv sync --all-groups
 
     - name: Run Safety scan
-      run: |
-        if [ -n "$SAFETY_API_KEY" ]; then
-          echo "Running Safety scan with API key"
-          uv run safety scan --save-as json safety-report.json
-        else
-          echo "Running Safety scan in development mode (no API key)"
-          uv run safety --stage development scan --save-as json safety-report.json
-        fi
+      run: uv run safety scan --save-as json safety-report.json
       env:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       continue-on-error: true  # Don't fail the workflow, just report
