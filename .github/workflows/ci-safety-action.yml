@@ -37,7 +37,7 @@ jobs:
       run: uv sync --all-groups
 
     - name: Run Safety scan
-      run: uv run safety scan --output json > safety-report.json
+      run: uv run safety scan --save-as json safety-report.json
       env:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       continue-on-error: true  # Don't fail the workflow, just report
