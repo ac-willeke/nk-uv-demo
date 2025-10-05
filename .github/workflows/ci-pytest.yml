@@ -1,4 +1,4 @@
-name: Pytest, Coverage and Deptry
+name: Code Quality | Pytest, Coverage and Deptry
 
 on:
   push:
