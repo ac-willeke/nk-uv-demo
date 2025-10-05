@@ -17,7 +17,7 @@ on:
         default: test-pypi
         type: choice
         options:
-        - test-pypi
+        - testpypi
           # - pypi  # Commented out - demo repo only uses TestPyPI
 
 permissions:
