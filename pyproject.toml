@@ -2,6 +2,7 @@
 name = "nk-uv-demo"
 version = "0.1.0"
 description = "Demo package for Naturkart project"
+license = "MIT"
 readme = "README.md"
 authors = [
     { name = "wilaca", email = "willeke.acampo@miljodir.no" }

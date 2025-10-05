@@ -4,7 +4,7 @@ This repository demonstrates best practices for Python project development and p
 
 ## Checklist
 
-- [ ] Open-source **license** (e.g. MIT)
+- [x] Open-source **license** (e.g. MIT)
 - [x] Repo **naming convention** (`nk-<name>`, `nkf-<name>`, etc.)
 - [ ] GitHub Action workflow for **code security** (Dependabot, CodeQL)
 
@@ -65,4 +65,3 @@ source .venv/bin/activate
 # add specific version of ipykernel to dev
 uv add --group dev "ipykernel>=6.29.5,<7"
 ```
-  
