@@ -1,0 +1,67 @@
+# useful commands:
+# pre-commit install
+# pre-commit run --files <file1> <file2>
+# pre-commit run --files R/*
+# pre-commit run --all-files
+# pre-commit uninstall
+# exclude: '^(notebooks|scripts)/.*'
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+      # File Validation
+  - id: check-added-large-files
+  - id: check-json
+    exclude: \.vscode/.*|\.devcontainer/.*
+  - id: check-toml
+  - id: check-yaml
+  - id: check-xml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+  - id: file-contents-sorter
+    args: [--unique]
+      # Code Quality
+  - id: check-case-conflict
+  - id: check-builtin-literals
+  - id: check-docstring-first
+      # Security
+  - id: detect-private-key
+
+  # File validation
+
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.15.0
+  hooks:
+  - id: pretty-format-toml
+    args: [--autofix]
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']
+
+  # Code Quality
+- repo: https://github.com/astral-sh/uv-pre-commit
+  rev: 0.8.23
+  hooks:
+  - id: uv-lock
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.13.3
+  hooks:
+  - id: ruff
+    args: [--fix, --exit-non-zero-on-fix, --show-fixes]
+  - id: ruff-format
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.18.2
+  hooks:
+  - id: mypy
+    args: [--ignore-missing-imports]
+
+- repo: https://github.com/woodruffw/zizmor-pre-commit
+  rev: v1.14.2
+  hooks:
+  - id: zizmor
+
+- repo: https://github.com/Yelp/detect-secrets
+  rev: v1.5.0
+  hooks:
+  - id: detect-secrets

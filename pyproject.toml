@@ -1,23 +1,102 @@
-[project]
-name = "nk-uv-demo"
-version = "0.1.0"
-description = "Demo package for Naturkart project"
-license = "MIT"
-readme = "README.md"
-authors = [
-    { name = "wilaca", email = "willeke.acampo@miljodir.no" }
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61"]
+
+[dependency-groups]
+dev = [
+  "deptry>=0.23.1",
+  "ipykernel>=6.29.5,<7",
+  "mypy>=1.18.2",
+  "pip>=25.2",
+  "pre-commit>=4.3.0",
+  "pytest>=8.4.2",
+  "pytest-cov>=7.0.0",
+  "ruff>=0.13.3",
+  "safety>=3.6.2",
+  "zizmor>=1.14.2"
 ]
-requires-python = ">=3.12"
+
+[project]
+authors = [
+  {name = "wilaca", email = "willeke.acampo@miljodir.no"}
+]
 dependencies = []
+description = "Demo package for Naturkart project demonstrating Python best practices."
+license = "MIT"
+name = "nk-uv-demo"
+readme = "README.md"
+requires-python = ">=3.12"
+version = "0.1.0"
 
 [project.scripts]
 nk-uv-demo = "nk_uv_demo:main"
 
-[build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"
+# DEPTRY config
+[tool.deptry]
+known_first_party = ["nk_uv_demo"]  # ignore local package
 
-[dependency-groups]
-dev = [
-    "ipykernel>=6.29.5,<7",
+# PYTEST config
+[tool.pytest]
+
+[tool.pytest.ini_options]
+addopts = [
+  "--cov=src",
+  "--cov-report=term",
+  "--cov-report=xml:coverage.xml"
 ]
+markers = [
+  "ci_exclude: Tests excluded from CI/CD pipeline"
+]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+# RUFF rules
+[tool.ruff]
+exclude = [
+  "dump",
+  "tmp"
+]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.format]
+docstring-code-format = true
+indent-style = "space"
+
+[tool.ruff.lint]
+ignore = [
+  "D107",  # pydocstyle: Missing docstring in __init__
+  "D213",  # pydocstyle: Multi-line summary should start at the second line
+  "E501",  # pycodestyle: Line too long
+  "F401",  # pyflakes: Module imported but unused
+  "D417",  # pydocstyle: Missing argument descriptions in docstrings
+  "ERA001"  # eradicate: Commented out code
+]
+select = [
+  "E4",  # pycodestyle: indentation errors
+  "E7",  # pycodestyle: statements and control flow
+  "E9",  # pycodestyle: runtime errors
+  "F",  # pyflakes: code correctness
+  "B",  # flake8-bugbear: likely bugs and design problems
+  "ERA",  # eradicate: commented-out code
+  "D",  # pydocstyle: docstring conventions
+  "D417",  # pydocstyle: missing argument descriptions in docstrings
+  "N"  # pep8-naming: naming conventions
+]
+unfixable = [
+  "B"  # flake8-bugbear
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"__init__.py" = ["E402", "D104"]  # pycodestyle: module level import not at top of file
+"tests/*.py" = ["D100", "D101", "D102", "D103", "D104", "D105", "D106"]  # Ignore docstring checks in tests
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+# SAFETY config
+[tool.safety]
+full-report = true
+ignore_scopes = []  # e.g. ignore "dev-dependencies"
+ignore_vulnerabilities = []  # ignore specific vulnerabilities (only after review!)
+output = "json"
