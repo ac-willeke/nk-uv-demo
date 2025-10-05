@@ -4,9 +4,13 @@ This repository demonstrates best practices for Python project development and p
 
 ## Checklist
 
-- [x] Open-source **license** (e.g. MIT)
+- [x] Open-source **license** (MIT)
 - [x] Repo **naming convention** (`nk-<name>`, `nkf-<name>`, etc.)
-- [x] GitHub Action workflow for **code security** (Dependabot, CodeQL)
+- [x] GitHub Action workflows for **CI/CD** (testing, security, deployment)
+- [x] **Code quality** tools (Ruff, mypy, pytest, pre-commit)
+- [x] **Security scanning** (Dependabot, CodeQL, Safety, Zizmor)
+- [x] **Package deployment** to Test PyPI
+- [x] **Dynamic versioning** with setuptools-scm
 
 ## Requirements
 
@@ -21,8 +25,8 @@ To follow this walk-through you must  **clone** the repository to your local mac
 
 ```bash
 # clone from github and navigate to folder
-gh repo clone naturkart-miljodir/nk-uv-demo
-cd ~/git/nk-uv-demo
+gh repo clone ac-willeke/nk-uv-demo
+cd nk-uv-demo
 ```
 
 ### **Test** the uv python package from CLI
@@ -166,10 +170,135 @@ Summary of PEP8 style rules and enforcement in this repository:
 | **Security** | GitHub Actions security | Zizmor | `zizmor .github/workflows/` | `cicd-zizmor.yml` | ✅ | ✅ |
 
 
-TODO:
-- GHA - package release
-- GHA - docker
-- Setup Docker
-    - prod container
-    - devcontainer
-    - GHCR
+## CI/CD Workflows
+
+This repository implements comprehensive CI/CD pipelines using GitHub Actions:
+
+### Continuous Integration (CI) - Runs on all branches and PRs
+
+| Workflow | File | Triggers | Description |
+|----------|------|----------|-------------|
+| **Pre-commit** | `ci-pre-commit.yml` | Push, PR | Code quality checks (Ruff, mypy, etc.) |
+| **Pytest** | `ci-pytest.yml` | Push to main/develop, PR | Unit tests with coverage + dependency analysis |
+| **Security Scan** | `ci-safety-action.yml` | Push, PR, Weekly | Python dependency vulnerability scanning |
+| **CodeQL** | `cicd-codeql-analysis.yaml` | PR to main/develop, Scheduled | Semantic code analysis for vulnerabilities |
+| **Zizmor** | `cicd-zizmor.yml` | Push to main, PR | GitHub Actions workflow security audit |
+
+### Continuous Deployment (CD) - Runs on releases and main branch
+
+| Workflow | File | Triggers | Description |
+|----------|------|----------|-------------|
+| **Package Build & Publish** | `cd-py-package.yml` | Release, Push to main, Manual | Builds and publishes to Test PyPI |
+
+### Automated Maintenance
+
+- **Dependabot**: Automated dependency updates (weekly)
+- **Pre-commit hooks**: Local code quality enforcement
+
+## Testing the Deployment
+
+This project is configured to deploy to **Test PyPI** (not production PyPI) for demonstration purposes.
+
+### 1. Test Local Package Installation
+
+```bash
+# Install the package in development mode
+uv pip install -e .
+
+# Test the CLI command
+nk-uv-demo
+# Expected output: Hello from nk-uv-demo!
+```
+
+### 2. Test Package Build
+
+```bash
+# Build the package locally
+uv build
+
+# Check the built package
+ls dist/
+# Should show: nk_uv_demo-*.tar.gz and nk_uv_demo-*.whl
+```
+
+### 3. Test Deployment to Test PyPI
+
+#### Automatic Deployment (Recommended)
+
+1. **Create a release** on GitHub:
+   ```bash
+   # Tag a version and push
+   git tag v0.1.0
+   git push origin v0.1.0
+
+   # Or create a release through GitHub UI
+   ```
+
+2. **Monitor the deployment**:
+   - Go to Actions tab in GitHub
+   - Watch the "Publish | Build and Publish Package to Test PyPI" workflow
+   - Check the deployment at: https://test.pypi.org/p/nk-uv-demo/
+
+#### Manual Deployment Testing
+
+1. **Trigger manual deployment**:
+   - Go to Actions tab → "Publish | Build and Publish Package to Test PyPI"
+   - Click "Run workflow" → Select branch → "Run workflow"
+
+2. **Verify deployment**:
+   ```bash
+   # Install from Test PyPI (in a fresh environment)
+   pip install -i https://test.pypi.org/simple/ nk-uv-demo
+
+   # Test the installed package
+   nk-uv-demo
+   ```
+
+### 4. Test CI/CD Pipeline
+
+#### Test CI (Code Quality)
+
+```bash
+# Create a feature branch
+git checkout -b feature/test-deployment
+
+# Make a small change (e.g., update version or add comment)
+echo "# Test comment" >> src/nk_uv_demo/__init__.py
+git add .
+git commit -m "Test CI pipeline"
+git push origin feature/test-deployment
+
+# Create PR and watch CI run:
+# - Pre-commit checks
+# - Pytest with coverage
+# - Security scans
+```
+
+#### Test CD (Deployment)
+
+```bash
+# Merge to main or create a release tag
+git checkout main
+git merge feature/test-deployment
+git push origin main
+
+# Or create a version tag
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+### 5. Monitoring and Verification
+
+- **GitHub Actions**: Monitor workflow runs in the Actions tab
+- **Test PyPI**: Check published packages at https://test.pypi.org/p/nk-uv-demo/
+- **Security**: Review Dependabot PRs and CodeQL alerts in Security tab
+- **Coverage**: Check coverage reports in CI logs
+
+### Notes on Production Deployment
+
+This demo repository is configured for **Test PyPI only**. For production:
+
+1. Uncomment the PyPI environment in `cd-py-package.yml`
+2. Set up PyPI trusted publishing in GitHub repository settings
+3. Configure production environment secrets
+4. Update the repository URL in the workflow
