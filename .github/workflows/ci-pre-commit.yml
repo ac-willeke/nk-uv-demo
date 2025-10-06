@@ -1,11 +1,12 @@
 # https://github.com/marketplace/actions/pre-commit-uv
-name: Code Quality | pre-commit
+name: CI | Code Quality pre-commit
 
 on:
+  workflow_dispatch:
   push:
     branches: ['**']
   pull_request:
-  workflow_dispatch:
+    branches: ['**']
 
 jobs:
   pre-commit:
