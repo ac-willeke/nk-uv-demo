@@ -9,15 +9,16 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
-name: "CodeQL Advanced"
+name: Security | CodeQL Advanced
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+  # push:
+    # branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   schedule:
-    - cron: '15 16 * * 5'
+  - cron: 0 5 1,15 * *
 
 jobs:
   analyze:
@@ -58,6 +59,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
     # Add any setup steps before running the `github/codeql-action/init` action.
     # This includes steps like installing compilers or runtimes (`actions/setup-node`
@@ -97,4 +100,4 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        category: "/language:${{matrix.language}}"
+        category: /language:${{matrix.language}}
