@@ -1,0 +1,60 @@
+name: CI | Build and Inspect a Python Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  # DOCS: # https://github.com/marketplace/actions/pre-commit-uv
+  pre-commit:
+    name: Code Quality (pre-commit)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - uses: tox-dev/action-pre-commit-uv@v1
+
+  pytest:
+    name: Python Tests & Coverage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - name: Show Git tag
+      run: |
+        echo "Git describe: $(git describe --tags --dirty --always)"
+        uv run python -c "import nk_uv_demo; print(f'Package version: {nk_uv_demo.__version__}')"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    # TODO: add separate group for ci in .toml
+    - name: Install dependencies
+      run: uv sync --extra dev
+
+    - name: Run tests with coverage
+      run: uv run pytest -m "not ci_exclude"
+
+    - name: Upload coverage to Codecov
+      if: github.repository_visibility == 'public'
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
