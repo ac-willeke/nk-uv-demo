@@ -1,0 +1,195 @@
+version: '3'
+
+vars:
+  PROJECT_NAME: nk-uv-demo
+  PYTHON_VERSION: '>=3.12'
+
+tasks:
+  # Setup and Installation
+  install:
+    desc: Install dependencies and setup development environment
+    cmds:
+    - uv sync --dev
+    - task: install-hooks
+
+  install-hooks:
+    desc: Install pre-commit hooks
+    cmds:
+    - uv run pre-commit install
+    status:
+    - test -f .git/hooks/pre-commit
+
+  # Code Quality
+  format:
+    desc: Format code with Ruff
+    cmds:
+    - uv run ruff format
+
+  lint:
+    desc: Run linting checks
+    cmds:
+    - uv run ruff check
+
+  lint-fix:
+    desc: Run linting checks and auto-fix issues
+    cmds:
+    - uv run ruff check --fix
+
+  typecheck:
+    desc: Run type checking with mypy
+    cmds:
+    - uv run mypy src/
+
+  deps-check:
+    desc: Check for dependency issues
+    cmds:
+    - uv run deptry .
+
+  # Testing
+  test:
+    desc: Run tests
+    cmds:
+    - uv run pytest
+
+  test-cov:
+    desc: Run tests with coverage
+    cmds:
+    - uv run pytest --cov
+
+  test-html:
+    desc: Run tests with HTML coverage report
+    cmds:
+    - uv run pytest --cov --cov-report=html
+    - echo "Coverage report generated in htmlcov/index.html"
+
+  # Security
+  security:
+    desc: Run security scans
+    deps: [security-deps, security-workflows]
+
+  security-deps:
+    desc: Scan for dependency vulnerabilities
+    cmds:
+    - uv run safety scan
+    ignore_error: true
+
+  security-workflows:
+    desc: Audit GitHub Actions workflows
+    cmds:
+    - zizmor .github/workflows/
+    ignore_error: true
+
+  # Code Quality Suite
+  check:
+    desc: Run all code quality checks
+    deps: [lint, typecheck, test-cov, deps-check]
+
+  pre-commit:
+    desc: Run pre-commit hooks on all files
+    cmds:
+    - uv run pre-commit run --all-files
+
+  pre-commit-update:
+    desc: Update pre-commit hooks to latest versions
+    cmds:
+    - uv run pre-commit autoupdate
+
+  # Build and Release
+  build:
+    desc: Build the package
+    cmds:
+    - uv build
+    - echo "Package built in dist/"
+
+  clean:
+    desc: Clean build artifacts and caches
+    cmds:
+    - rm -rf dist/ build/ *.egg-info/
+    - rm -rf .pytest_cache/ .mypy_cache/ .ruff_cache/
+    - rm -rf htmlcov/ .coverage coverage.xml
+    - find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+
+  # Development
+  run:
+    desc: Run the CLI application
+    cmds:
+    - uv run {{.PROJECT_NAME}}
+
+  dev-setup:
+    desc: Complete development environment setup
+    deps: [install, check]
+    cmds:
+    - echo "Development environment ready!"
+    - echo "Try - task run"
+
+  notebook:
+    desc: Start Jupyter notebook server
+    cmds:
+    - uv run jupyter notebook notebooks/
+
+  # Version Management
+  version:
+    desc: Show current version (dynamic versioning)
+    cmds:
+    - python -c "from importlib.metadata import version; print(version('{{.PROJECT_NAME}}'))"
+
+  tag:
+    desc: 'Create and push a new version tag (usage: task tag VERSION=v1.0.0)'
+    cmds:
+    - git tag {{.VERSION}}
+    - git push origin {{.VERSION}}
+    - echo "Tagged and pushed {{.VERSION}}"
+    requires:
+      vars: [VERSION]
+
+  # CI/CD Simulation
+  ci-local:
+    desc: Simulate CI pipeline locally
+    deps: [pre-commit, test-cov, security]
+    cmds:
+    - echo "Local CI simulation complete!"
+
+  # Docker (if needed)
+  docker-build:
+    desc: Build Docker image
+    cmds:
+    - docker build -t {{.PROJECT_NAME}}:latest .
+    status:
+    - test -f Dockerfile
+
+  docker-run:
+    desc: Run Docker container
+    deps: [docker-build]
+    cmds:
+    - docker run --rm {{.PROJECT_NAME}}:latest
+
+  # Help
+  default:
+    desc: Show available tasks
+    cmds:
+    - task --list-all
+
+  help:
+    desc: Show detailed help for common workflows
+    cmds:
+    - |
+      echo "Common workflows:"
+      echo ""
+      echo "  Development setup:"
+      echo "    task dev-setup    # Complete setup"
+      echo "    task install      # Install dependencies only"
+      echo ""
+      echo "  Code quality:"
+      echo "    task check        # Run all quality checks"
+      echo "    task format       # Format code"
+      echo "    task lint-fix     # Fix linting issues"
+      echo ""
+      echo "  Testing:"
+      echo "    task test         # Run tests"
+      echo "    task test-html    # Tests with HTML coverage"
+      echo ""
+      echo "  Release:"
+      echo "    task build        # Build package"
+      echo "    task tag VERSION=v1.0.0  # Create release tag"
+      echo ""
+      echo "  Use 'task --list' to see all available tasks"

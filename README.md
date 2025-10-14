@@ -1,307 +1,117 @@
-# Naturkart uv demo - Python DevOps best practices
+# Naturkart uv demo - Python DevOps practices
 
-This repository demonstrates best practices for Python project development and packaging. It showcases how to structure a Python project, manage dependencies with uv, implement CI/CD pipelines using GitHub Actions, and containerize code with Docker.
+[![CI](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml)
+[![Tests](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml)
+[![Security](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml)
 
-## Checklist
+A demonstration of Python DevOps practices using automated tools and workflows. This repository shows Python project structure, code quality enforcement, security scanning, and CI/CD pipelines.
 
-- [x] Open-source **license** (MIT)
-- [x] Repo **naming convention** (`nk-<name>`, `nkf-<name>`, etc.)
-- [x] GitHub Action workflows for **CI/CD** (testing, security, deployment)
-- [x] **Code quality** tools (Ruff, mypy, pytest, pre-commit)
-- [x] **Security scanning** (Dependabot, CodeQL, Safety, Zizmor)
-- [x] **Package deployment** to Test PyPI
-- [x] **Dynamic versioning** with setuptools-scm
+## Features
 
-## Requirements
+- **Python Tooling** - uv for dependency management
+- **Code Quality** - Ruff, mypy, pytest with testing
+- **Security** - Security scanning and monitoring
+- **CI/CD Pipeline** - Automated testing, building, and deployment
+- **Developer Tools** - Pre-commit hooks, VS Code integration, Taskfile automation
+- **Documentation** - Guides and implementation details
 
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [GitHub](https://github.com/)
-- [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [Docker](https://docs.docker.com/engine/install/) (optional)
-- [VS Code](https://code.visualstudio.com/) (optional)
+## Quick Start
 
-## Demo walk-through
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) - Python package manager
+- [Task](https://taskfile.dev/installation/) - Task runner (optional)
+- [Git](https://git-scm.com/) and [GitHub](https://github.com/) account
 
-To follow this walk-through you must  **clone** the repository to your local machine.
+### Setup
 
 ```bash
-# clone from github and navigate to folder
+# Clone the repository
 gh repo clone ac-willeke/nk-uv-demo
 cd nk-uv-demo
+
+# Development setup (installs dependencies, hooks, runs checks)
+task dev-setup
+
+# Test the application
+task run
+# → "Hello from nk-uv-demo!"
+
+# See all available commands
+task --list
 ```
 
-### **Test** the uv python package from CLI
+### Key Commands
 
 ```bash
-# Run the entrypoint
-uv run nk-uv-demo
-# > Hello from nk-uv-demo!
+task check            # Run all quality checks
+task test-html        # Run tests with coverage
+task build            # Build Python package
 ```
 
-For more uv commands check: [CLI Reference](https://docs.astral.sh/uv/reference/cli/)
+For complete command reference, see [Command Cheatsheet](docs/command-cheatsheet.md).
 
-### **Connect** to the Python environment `.venv`
+## Tools Included
 
-In Visual Studio Code, the Python extension and Jupyter Notebooks extension detect the `.venv` created by `uv` package manager as the default environment. If not, set the enviroment manually.
+- **Code Quality:** Ruff (linting/formatting), mypy (type checking), pytest (testing)
+- **Security:** Safety, CodeQL, Dependabot, Zizmor
+- **CI/CD:** GitHub Actions workflows, automated Test PyPI publishing
+- **Developer Tools:** Pre-commit hooks, VS Code integration, Taskfile automation
 
-#### 1. Connect in Python Scripts
+## Documentation
 
-- Open a Python script in VS Code.
-- Click on the Python version in the bottom left corner of the VS Code window.
-- Click on "Enter interpreter path..." > enter path to python.exe in the .venv environment: `./.venv/Scripts/python.exe` or `./.venv/bin/python.exe`
+Documentation is available in the [`docs/`](docs/) directory:
 
-#### 2. Connect from the terminal
+### Getting Started
+- **[Requirements](docs/getting-started/requirements.md)** - System requirements and tool installation
+- **[Installation](docs/getting-started/installation.md)** - Step-by-step setup guide
+- **[Quick Start](docs/getting-started/quickstart.md)** - Get running quickly with Taskfile
 
-```bash
-# connect .venv environment
-source .venv/bin/activate
-```
+### Development
+- **[Development Guide](docs/development.md)** - Complete development workflow and tools
 
-#### 3. Connect in Jupyter Notebooks
+### CI/CD
+- **[Workflows](docs/ci-cd/workflows.md)** - GitHub Actions CI/CD pipelines
+- **[Deployment](docs/ci-cd/deployment.md)** - Package building and publishing
 
-- Open the notebook [notebooks/demo.ipynb](./notebooks/demo.ipynb)
-- Select `.venv` as Kernel
-    - Right-upper corner > "Select Kernel" > "add path to Kernel"
-- Run the notebook cells to test whether you can use the local package inside the notebook.
+### Reference
+- **[Command Cheatsheet](docs/command-cheatsheet.md)** - All commands organized by tool
+- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 
-**Note:** To use the *.venv* inside notebooks the `ipykernel` must be installed in the *.venv*. You can install it as development dependency using:
+## Use Cases
 
-```bash
-# add specific version of ipykernel to dev
-uv add --group dev "ipykernel>=6.29.5,<7"
-```
+This repository serves as:
 
-### **Code Quality** and **Security**
+- **Project Template** - Starting point for new Python projects
+- **Learning Resource** - Study Python DevOps practices
+- **Reference Implementation** - See how tools integrate in practice
+- **Best Practices Guide** - Follow established patterns and workflows
 
-This repository implements multiple layers of code quality checks and security measures to ensure reliable, maintainable, and secure code.
+## Contributing
 
-#### Code Quality Tools
+To contribute:
 
-- **[Ruff](https://docs.astral.sh/ruff/):** Fast Python linter and formatter (replaces flake8, black, isort)
-- **[Mypy](https://mypy-lang.org/):** Static type checker for Python type hints
-- **[pytest](https://docs.pytest.org/en/stable/):** Testing framework for unit and integration tests
-- **[Deptry](https://deptry.com/):** Dependency analyzer to find unused, missing, or misplaced dependencies
+1. **Setup**: Follow the [Installation Guide](docs/getting-started/installation.md)
+2. **Develop**: Read the [Development Overview](docs/development/README.md)
+3. **Quality**: Ensure code meets our [quality standards](docs/development/code-quality.md)
+4. **Test**: Run tests following our [testing guidelines](docs/development/testing.md)
+5. **Submit**: Create a pull request with clear description
 
+## Project Status
 
-#### Security Tools
+| Check | Status |
+|-------|--------|
+| **Build** | ![CI](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml/badge.svg) |
+| **Tests** | ![Tests](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml/badge.svg) |
+| **Security** | ![Security](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml/badge.svg) |
+| **Package** | [Test PyPI](https://test.pypi.org/project/nk-uv-demo/) |
 
-- **[Dependabot](https://github.com/dependabot):** Automated dependency updates and vulnerability scanning
-- **[CodeQL](https://codeql.github.com/):** Semantic code analysis for security vulnerabilities
-- **[Safety](https://pypi.org/project/safety/):** Python dependency vulnerability scanner, requires an account which you can link with GitHub.
-- **[Zizmor](https://docs.zizmor.sh/):** GitHub Actions workflow security auditing
+## License
 
-#### Local Development Commands
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```bash
-# Code formatting and linting
-uv run ruff format        # Format code
-uv run ruff check         # Lint code
-uv run ruff check --fix   # Auto-fix linting issues
+---
 
-# Type checking
-uv run mypy src/
-
-# Dependency analysis
-uv run deptry .          # Check for dependency issues
-
-# Testing
-uv run pytest           # Run all tests
-uv run pytest --cov     # Run tests with coverage
-uv run pytest --cov --cov-report=html # Run tests with HTML coverage report
-
-# Security scanning (requires free Safety account)
-uv run safety auth login --headless  # First-time setup: authenticate with Safety
-uv run safety scan         # Scan for known vulnerabilities
-zizmor .github/workflows/  # Audit GitHub Actions workflows
-
-# Pre-commit hooks
-pre-commit install        # Install git hooks (one-time setup)
-pre-commit run --all-files  # Run all hooks on all files
-pre-commit run --files <file1> <file2>  # Run hooks on specific files
-
-# Dynamic versioning - setuptools-scm
-# Development
-git commit -m "Add feature"  # → 1.0.1.dev1+g123abc
-git commit -m "Fix bug"      # → 1.0.1.dev2+g456def
-
-# Release
-git tag v1.1.0              # → 1.1.0 (clean release)
-git push --tags
-
-# Continue development
-git commit -m "New feature"  # → 1.1.1.dev1+g789ghi
-```
-
-#### Quality Gates
-
-Code quality is enforced at multiple stages:
-
-- **Local Development:** VS Code [settings](.vscode/settings.json) and [extensions](.vscode/extensions.json) provide real-time feedback
-- **Pre-commit Hooks:** Automated checks before each commit
-- **GitHub Actions:** Continuous integration checks on push and pull requests
-- **Dependabot:** Automated security updates for dependencies
-- **CodeQL:** Security vulnerability scanning
-
-#### Style and Convention Rules
-
-Summary of PEP8 style rules and enforcement in this repository:
-
-| Practice | PEP8 | Repository | Tool | Local check | pre-commit | GHA |
-|----------|------|------------|------|-------------|------------|-----|
-| Max line length | 79  | 88  | Ruff [E501] | `uv run ruff check` | ✅ | ✅ |
-| Docstring and comment length | 72  | 78  | not enforced | - | - | - |
-| Docstring convention | PEP257 | reStructuredText (reST) | Ruff [D] | `uv run ruff check` | ✅ | ✅ |
-| Indentation | 4 spaces | PEP8 | Ruff [E111] | `uv run ruff format --check` | ✅ | ✅ |
-| Naming convention - variables, functions, methods | snake_case | PEP8 | Ruff [N] | `uv run ruff check` | ✅ | ✅ |
-| Naming convention - variables with constant values | ALL_CAPS | PEP8 | Ruff [N] | `uv run ruff check` | ✅ | ✅ |
-| Naming convention - classes | CapWords | PEP8 | Ruff [N] | `uv run ruff check` | ✅ | ✅ |
-| Type checking | - | enforced | mypy | `uv run mypy` | ✅ | ✅ |
-| Language | English | PEP8 | not enforced | - | - | - |
-
-#### Testing and Security Rules
-
-| Category | Practice | Tool | Local check | GHA File | pre-commit | GHA |
-|----------|----------|------|-------------|----------|------------|-----|
-| **Testing** | Unit tests | pytest | `uv run pytest` | `ci-pytest.yml` | ❌ | ✅ |
-| **Testing** | Test coverage | pytest-cov | `uv run pytest --cov` | `ci-pytest.yml` | ❌ | ✅ |
-| **Dependencies** | Dependency analysis | Deptry | `uv run deptry .` | `ci-pytest.yml` | ❌ | ✅ |
-| **Security** | Dependency vulnerabilities | Dependabot | - | `dependabot.yaml` | ❌ | ✅ |
-| **Security** | Code vulnerabilities | CodeQL | - | `cicd-codeql-analysis.yaml` | ❌ | ✅ |
-| **Security** | Python package security | Safety | `uv run safety scan` | `ci-safety-action.yml` | ❌ | ✅ |
-| **Security** | GitHub Actions security | Zizmor | `zizmor .github/workflows/` | `cicd-zizmor.yml` | ✅ | ✅ |
-
-
-## CI/CD Workflows
-
-This repository implements comprehensive CI/CD pipelines using GitHub Actions:
-
-### Continuous Integration (CI) - Runs on all branches and PRs
-
-| Workflow | File | Triggers | Description |
-|----------|------|----------|-------------|
-| **Pre-commit** | `ci-pre-commit.yml` | Push, PR | Code quality checks (Ruff, mypy, etc.) |
-| **Pytest** | `ci-pytest.yml` | Push to main/develop, PR | Unit tests with coverage + dependency analysis |
-| **Security Scan** | `ci-safety-action.yml` | Push, PR, Weekly | Python dependency vulnerability scanning |
-| **CodeQL** | `cicd-codeql-analysis.yaml` | PR to main/develop, Scheduled | Semantic code analysis for vulnerabilities |
-| **Zizmor** | `cicd-zizmor.yml` | Push to main, PR | GitHub Actions workflow security audit |
-
-### Continuous Deployment (CD) - Runs on releases and main branch
-
-| Workflow | File | Triggers | Description |
-|----------|------|----------|-------------|
-| **Package Build & Publish** | `cd-py-package.yml` | Release, Push to main, Manual | Builds and publishes to Test PyPI |
-
-### Automated Maintenance
-
-- **Dependabot**: Automated dependency updates (weekly)
-- **Pre-commit hooks**: Local code quality enforcement
-
-## Testing the Deployment
-
-This project is configured to deploy to **Test PyPI** (not production PyPI) for demonstration purposes.
-
-### 1. Test Local Package Installation
-
-```bash
-# Install the package in development mode
-uv pip install -e .
-
-# Test the CLI command
-nk-uv-demo
-# Expected output: Hello from nk-uv-demo!
-```
-
-### 2. Test Package Build
-
-```bash
-# Build the package locally
-uv build
-
-# Check the built package
-ls dist/
-# Should show: nk_uv_demo-*.tar.gz and nk_uv_demo-*.whl
-```
-
-### 3. Test Deployment to Test PyPI
-
-#### Automatic Deployment (Recommended)
-
-1. **Create a release** on GitHub:
-   ```bash
-   # List latests tag
-   git tag --list
-
-   # Tag a version and push
-   git tag v0.1.0
-   git push origin v0.1.0
-
-   # Or create a release through GitHub UI
-   ```
-
-2. **Monitor the deployment**:
-   - Go to Actions tab in GitHub
-   - Watch the "Publish | Build and Publish Package to Test PyPI" workflow
-   - Check the deployment at: https://test.pypi.org/p/nk-uv-demo/
-
-#### Manual Deployment Testing
-
-1. **Trigger manual deployment**:
-   - Go to Actions tab → "Publish | Build and Publish Package to Test PyPI"
-   - Click "Run workflow" → Select branch → "Run workflow"
-
-2. **Verify deployment**:
-   ```bash
-   # Install from Test PyPI (in a fresh environment)
-   pip install -i https://test.pypi.org/simple/ nk-uv-demo
-
-   # Test the installed package
-   nk-uv-demo
-   ```
-
-### 4. Test CI/CD Pipeline
-
-#### Test CI (Code Quality)
-
-```bash
-# Create a feature branch
-git checkout -b feature/test-deployment
-
-# Make a small change (e.g., update version or add comment)
-echo "# Test comment" >> src/nk_uv_demo/__init__.py
-git add .
-git commit -m "Test CI pipeline"
-git push origin feature/test-deployment
-
-# Create PR and watch CI run:
-# - Pre-commit checks
-# - Pytest with coverage
-# - Security scans
-```
-
-#### Test CD (Deployment)
-
-```bash
-# Merge to main or create a release tag
-git checkout main
-git merge feature/test-deployment
-git push origin main
-
-# Or create a version tag
-git tag v0.1.1
-git push origin v0.1.1
-```
-
-### 5. Monitoring and Verification
-
-- **GitHub Actions**: Monitor workflow runs in the Actions tab
-- **Test PyPI**: Check published packages at https://test.pypi.org/p/nk-uv-demo/
-- **Security**: Review Dependabot PRs and CodeQL alerts in Security tab
-- **Coverage**: Check coverage reports in CI logs
-
-### Notes on Production Deployment
-
-This demo repository is configured for **Test PyPI only**. For production:
-
-1. Uncomment the PyPI environment in `cd-py-package.yml`
-2. Set up PyPI trusted publishing in GitHub repository settings
-3. Configure production environment secrets
-4. Update the repository URL in the workflow
+**Getting started:** [Installation Guide](docs/getting-started/installation.md)
+**Commands:** [Command Cheatsheet](docs/command-cheatsheet.md)
+**Need help:** [Troubleshooting](docs/troubleshooting.md)
+**Contributing:** [Development Guide](docs/development.md)
