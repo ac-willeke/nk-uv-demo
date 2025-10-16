@@ -4,7 +4,7 @@ on:
   # Publish using GitHub Releases UI
   release:
     types: [published]
-  # Publish using git tags
+  # Publish using git tags, pypi only accepts CLEAN tags (e.g. v1.2.0)
   # git tag -a v1.2.0 -m "Release v.1.2.0 - Bug fixes and improvements"
   # git push origin v1.2.0 --> triggers this workflow
   push:
