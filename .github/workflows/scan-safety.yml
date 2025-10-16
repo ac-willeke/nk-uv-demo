@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-  - cron: 0 6 1 * *        # Monthly: 1st of month, 6 AM UTC
+  - cron: 0 6 1 * *   # Monthly: 1st of month, 6 AM UTC
 
 jobs:
   safety:
@@ -16,11 +16,11 @@ jobs:
       contents: read
     steps:
     - name: Checkout code
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
       with:
         persist-credentials: false
     - name: Run Safety CLI to check for vulnerabilities
-      uses: pyupio/safety-action@f9227b7c32ca914b6495644e2a91ad5bb881b478 # v1
+      uses: pyupio/safety-action@2591cf2f3e67ba68b923f4c92f0d36e281c65023   # v1.0.1
       with:
         api-key: ${{ secrets.SAFETY_API_KEY }}
 
@@ -32,24 +32,18 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      with:
-        persist-credentials: false
-
-    # TODO: add separate group for ci in .toml
-    - name: Checkout code
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
       with:
         persist-credentials: false
 
     - name: Install uv
-      uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d   # v7.1.0
       with:
         enable-cache: true
 
-    # TODO: add separate group for ci in .toml
+          # TODO: add separate group for ci in .toml
     - name: Install dependencies
-      run: uv sync --extra dev
+      run: uv sync --group dev
 
     - name: Run deptry (dependency check)
       run: uv run deptry . --known-first-party nk_uv_demo
