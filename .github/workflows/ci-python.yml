@@ -37,9 +37,9 @@ jobs:
       with:
         enable-cache: true
 
-      # TODO: add separate group for ci in .toml
+        # TODO: add separate group for ci in .toml
     - name: Install dependencies
-      run: uv sync --extra dev
+      run: uv sync --group dev
 
     - name: Show Git tag
       run: |
