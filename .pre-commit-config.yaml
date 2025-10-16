@@ -9,7 +9,7 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v6.0.0
   hooks:
-  # File Validation
+      # File Validation
   - id: check-added-large-files
   - id: check-json
     exclude: \.vscode/.*|\.devcontainer/.*
@@ -18,14 +18,14 @@ repos:
   - id: check-xml
   - id: end-of-file-fixer
   - id: trailing-whitespace
-  # Code Quality
+      # Code Quality
   - id: check-case-conflict
   - id: check-builtin-literals
   - id: check-docstring-first
-  # Security
+      # Security
   - id: detect-private-key
 
-  # File validation
+    # File validation
 
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.15.0
@@ -36,7 +36,7 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 
-  # Code Quality
+    # Code Quality
 - repo: https://github.com/astral-sh/uv-pre-commit
   rev: 0.8.23
   hooks:
@@ -59,7 +59,9 @@ repos:
   rev: v1.14.2
   hooks:
   - id: zizmor
-    args: [--config, .zizmor.yml, --no-online-audits]
+    args: [--no-online-audits]
+        # If you have a custom config file, e.g. .zizmor.yml,
+        # args: [--config, .zizmor.yml, --no-online-audits]
 
 - repo: https://github.com/Yelp/detect-secrets
   rev: v1.5.0

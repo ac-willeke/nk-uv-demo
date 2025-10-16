@@ -8,7 +8,7 @@ on:
     paths:
     - .github/workflows/**
   schedule:
-  - cron: 0 6 1 * *        # Monthly: 1st of month, 6 AM UTC
+  - cron: 0 6 1 * *   # Monthly: 1st of month, 6 AM UTC
 
 permissions: {}
 
@@ -30,7 +30,9 @@ jobs:
       uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4   # v6.7.0
 
     - name: Run zizmor 🌈
-      run: uvx zizmor --config .zizmor.yml --format=sarif . > results.sarif
+      run: uvx zizmor --format=sarif . > results.sarif
+        # If you have a custom config file, e.g. .zizmor.yml,
+        # run: uvx zizmor --config .zizmor.yml --format=sarif . > results.sarif
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
