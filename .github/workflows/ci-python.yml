@@ -15,10 +15,10 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
       with:
         persist-credentials: false
-    - uses: tox-dev/action-pre-commit-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182   # v1
+    - uses: tox-dev/action-pre-commit-uv@246b66536e366bb885f52d61983bf32f7c95e8b1   # v1.0.3
 
   test-coverage:
     name: Python Tests & Coverage
@@ -28,7 +28,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
       with:
         persist-credentials: false
 
@@ -38,11 +38,11 @@ jobs:
         uv run python -c "import nk_uv_demo; print(f'Package version: {nk_uv_demo.__version__}')"
 
     - name: Install uv
-      uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182   # v5.4.1
+      uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d   # v7.1.0
       with:
         enable-cache: true
 
-      # TODO: add separate group for ci in .toml
+          # TODO: add separate group for ci in .toml
     - name: Install dependencies
       run: uv sync --extra dev
 
@@ -51,7 +51,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: github.repository_visibility == 'public'
-      uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238   # v4.6.0
+      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7   # v5.5.1
       with:
         file: ./coverage.xml
         flags: unittests
@@ -66,8 +66,8 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
       with:
         fetch-depth: 0   # Required for setuptools-scm
         persist-credentials: false
-    - uses: hynek/build-and-inspect-python-package@73aea398b9d6bbe9d1310d120db0e0f4fc4b4bf7   # v2.9.0
+    - uses: hynek/build-and-inspect-python-package@efb823f52190ad02594531168b7a2d5790e66516   # v2.14.0
