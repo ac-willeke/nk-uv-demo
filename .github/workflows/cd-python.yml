@@ -1,4 +1,4 @@
-name: CD | Publish Package to Test PyPI
+name: CD | Python Build and Publish
 
 on:
   # Publish using GitHub Releases UI
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Environment to deploy to (TestPyPI only for demo repo)
+        description: Publishing location testpypi or pypi. Do not publish demo packages to pypi!
         required: true
         default: testpypi
         type: choice

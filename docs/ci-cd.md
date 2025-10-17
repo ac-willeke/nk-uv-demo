@@ -19,7 +19,7 @@ For commands, see [Command Cheatsheet](../command-cheatsheet.md#github-actions-c
 | Workflow | File | Trigger | Purpose |
 |----------|------|---------|---------|
 | **Quality Checks** | `ci-quality.yml` | Push, PR | Pre-commit hooks, formatting, linting |
-| **Testing** | `ci-test-build.yml` | Push to main/develop, PR | Tests, coverage, dependency analysis |
+| **Testing** | `ci-test-build.yml` | Push to main, PR | Tests, coverage, dependency analysis |
 | **Security Scan** | `scan-safety.yml` | Push, PR, Weekly | Dependency vulnerability scanning |
 | **CodeQL Analysis** | `scan-codeql.yml` | PR to main/develop, Scheduled | Semantic code security analysis |
 | **Workflow Security** | `scan-zizmor.yml` | Push to main, PR | GitHub Actions workflow auditing |
@@ -63,30 +63,101 @@ For commands, see [Command Cheatsheet](../command-cheatsheet.md#github-actions-c
 
 ## Deployment Process
 
-### Automated Deployment
+### Local Development Deployment
 
-**Release Deployment:**
+**Build Package Locally:**
 ```bash
-git tag v1.0.0
-git push origin v1.0.0    # Triggers deployment workflow
+# Build package for testing
+uv build
+
+# Check what version will be created
+uv run python -m setuptools_scm
+
+# Test package installation locally
+pip install dist/nk_uv_demo-*.whl
 ```
 
-**Main Branch Deployment:**
-Every push to `main` automatically deploys to Test PyPI.
+**Manual Upload to Test PyPI (Local):**
+```bash
+# Install twine for uploading
+uv add --group dev twine
 
-**Manual Deployment:**
-Use GitHub Actions UI → "CD | Publish to Test PyPI" → "Run workflow"
+# Build package
+uv build
+
+# Upload to Test PyPI (requires account and API token)
+uv run twine upload --repository testpypi dist/*
+```
+
+### CI/CD Automated Deployment
+
+**Method 1: Git Tag Release**
+```bash
+# Create and push version tag
+git tag v1.6.0 -m "Release v1.6.0 - New features and fixes"
+git push origin v1.6.0    # Triggers CD workflow automatically
+```
+
+**Method 2: GitHub Release**
+1. Go to GitHub repository → Releases → "Create a new release"
+2. Choose a tag (e.g., `v1.6.0`) or create new tag
+3. Fill release notes and click "Publish release"
+4. CD workflow triggers automatically
+
+**Method 3: Manual Workflow Dispatch**
+1. Go to GitHub → Actions → "CD | Python Build and Publish"
+2. Click "Run workflow" → Select branch → Run
+3. Choose deployment target (testpypi only for this demo)
+
+### Deployment Triggers
+
+| Method | Trigger | When to Use |
+|--------|---------|-------------|
+| **Git Tags** | Push tags matching `v*.*.*` | Automated releases from command line |
+| **GitHub Releases** | Publishing a release | Releases with notes and changelogs |
+| **Manual Dispatch** | GitHub Actions UI | Testing, hotfixes, or manual control |
+| **Local Build** | `uv build` locally | Development testing and validation |
 
 ### Version Management
-Uses setuptools-scm for automatic versioning:
-- **Development:** `1.0.1.dev1+g123abc` (commits after tag)
-- **Release:** `1.0.0` (clean tagged version)
+
+**setuptools-scm Automatic Versioning:**
+- **Clean tag:** `v1.6.0` → Package version: `1.6.0` ✅ **Publishes**
+- **After tag:** `v1.6.0-3-gabc123-dirty` → Package version: `1.6.1.dev3+gabc123.d20241017` ❌ **No publish**
+- **Development:** Commits without tags → Development versions ❌ **No publish**
+
+**Check Current Version:**
+```bash
+# Git tag status
+git describe --tags --dirty --always
+
+# Package version that would be built
+uv run python -m setuptools_scm
+
+# Current installed package version
+uv run python -c "import nk_uv_demo; print(nk_uv_demo.__version__)"
+```
 
 ### Testing Deployment
-After deployment, verify package:
+
+**After CI/CD Deployment:**
 ```bash
+# Install from Test PyPI
 pip install -i https://test.pypi.org/simple/ nk-uv-demo
+
+# Test package works
 nk-uv-demo    # Should output: Hello from nk-uv-demo!
+
+# Check version matches tag
+python -c "import nk_uv_demo; print(nk_uv_demo.__version__)"
+```
+
+**After Local Build:**
+```bash
+# Install local wheel
+pip install dist/nk_uv_demo-*.whl
+
+# Test functionality
+nk-uv-demo
 ```
 
 ## Quality Gates and Branch Protection
@@ -106,6 +177,29 @@ Configure in repository settings:
 | **Code Quality** | 0 errors | Ruff, mypy |
 | **Dependencies** | 0 issues | Deptry |
 
+## Deployment Environments
+
+### Test PyPI (Current Setup)
+- **Purpose:** Testing and demonstration environment
+- **URL:** https://test.pypi.org/project/nk-uv-demo/
+- **Authentication:** GitHub OIDC trusted publishing (no API keys)
+- **Retention:** Packages may be deleted after 90 days of inactivity
+- **Installation:** `pip install -i https://test.pypi.org/simple/ nk-uv-demo`
+
+### Production PyPI (Future Setup)
+To deploy to production PyPI:
+1. Configure trusted publishing for PyPI (not TestPyPI)
+2. Update workflow `repository-url` setting
+3. Add production environment protection rules
+4. Set up production-specific quality gates
+
+```yaml
+# For production PyPI deployment
+- name: Publish to PyPI
+  uses: pypa/gh-action-pypi-publish@v1
+  # Remove repository-url for production PyPI
+```
+
 ## Environment Configuration
 
 ### Repository Secrets
@@ -114,6 +208,26 @@ Configure in GitHub repository settings:
 |--------|---------|---------|
 | `SAFETY_API_KEY` | Safety vulnerability scanning | Security workflows |
 | `CODECOV_TOKEN` | Coverage report uploads | Test workflows |
+
+### Local Development Secrets
+For local publishing (optional):
+```bash
+# Create ~/.pypirc for local uploads
+[distutils]
+index-servers =
+    testpypi
+    pypi
+
+[testpypi]
+repository = https://test.pypi.org/legacy/
+username = __token__
+password = <TestPyPI API token>
+
+[pypi]
+repository = https://upload.pypi.org/legacy/
+username = __token__
+password = <PyPI API token>
+```
 
 ### Permissions
 Workflows use minimal required permissions:
@@ -178,10 +292,39 @@ task build           # Test package building locally
 uv run python -m setuptools_scm  # Check version detection
 ```
 
+**Deployment Failures:**
+```bash
+# Check version calculation
+git describe --tags --dirty --always
+uv run python -m setuptools_scm
+
+# Verify clean git state
+git status
+
+# Test local build
+uv build && ls -la dist/
+
+# Verify tag format
+git tag --list | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$"
+```
+
+**Version Synchronization Issues:**
+```bash
+# Remove stale version files
+rm -f src/nk_uv_demo/_version.py
+
+# Force reinstall to refresh version
+uv pip install -e . --force-reinstall
+
+# Verify version consistency
+uv run python -c "import nk_uv_demo; print(nk_uv_demo.__version__)"
+```
+
 ### Workflow Debugging
 - Check workflow logs in GitHub Actions tab
 - Use `task ci-local` to reproduce issues locally
 - Clear workflow caches if needed (GitHub repository settings)
+- For deployment issues, check the "CD | Python Build and Publish" workflow logs
 
 ## Production Deployment (Future)
 

@@ -1,5 +1,5 @@
 # Docs: https://docs.safetycli.com/safety-docs/installation/securing-git-repositories/github/github-actions
-name: Security Scan | Safety Scan and Dependency Analysis
+name: Security Scan | Python Vulnerability Scanning with Safety
 
 on:
   workflow_dispatch:
@@ -23,27 +23,4 @@ jobs:
       uses: pyupio/safety-action@2591cf2f3e67ba68b923f4c92f0d36e281c65023   # v1.0.1
       with:
         api-key: ${{ secrets.SAFETY_API_KEY }}
-
-  deptry:
-    name: Dependency Analysis
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8   # v5.0.0
-      with:
-        persist-credentials: false
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d   # v7.1.0
-      with:
-        enable-cache: true
-
-          # TODO: add separate group for ci in .toml
-    - name: Install dependencies
-      run: uv sync --group dev
-
-    - name: Run deptry (dependency check)
-      run: uv run deptry . --known-first-party nk_uv_demo
+        args: --detailed-output

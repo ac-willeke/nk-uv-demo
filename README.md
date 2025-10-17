@@ -1,10 +1,25 @@
 # Naturkart uv demo - Python DevOps practices
 
-[![CI](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml)
-[![Tests](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml)
-[![Security](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml/badge.svg)](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TestPyPI](https://img.shields.io/badge/TestPyPI-latest-blue)](https://test.pypi.org/project/nk-uv-demo/)
+[![Coverage](https://codecov.io/gh/ac-willeke/nk-uv-demo/branch/main/graph/badge.svg)](https://codecov.io/gh/ac-willeke/nk-uv-demo)
+[![Safety](https://img.shields.io/badge/Safety-Dashboard-blue)](https://platform.safetycli.com/codebases/nk-uv-demo/findings)
 
 A demonstration of Python DevOps practices using automated tools and workflows. This repository shows Python project structure, code quality enforcement, security scanning, and CI/CD pipelines.
+
+
+## Workflow Statuses
+
+| Job | Status | Description |
+|---|---|---|
+| **CI Python** | ![Status](https://img.shields.io/github/actions/workflow/status/ac-willeke/nk-uv-demo/ci-python.yml?branch=main&label=&style=flat) | • Pre-commit hooks (ruff, mypy etc.)<br>• Test coverage with pytest and codecov<br>• Python dependency analysis<br>• Build and test package |
+| **CD Python** | ![Status](https://img.shields.io/github/actions/workflow/status/ac-willeke/nk-uv-demo/cd-python.yml?branch=main&label=&style=flat) | • Build Python package (wheel + sdist)<br>• Publish to Test PyPI<br>• Released by git tags or manually in GitHub |
+| **Safety Scan** | ![Status](https://img.shields.io/github/actions/workflow/status/ac-willeke/nk-uv-demo/scan-safety.yml?branch=main&label=&style=flat) | • Python dependency scan<br>• Results in GitHub Actions log and on the [Safety](https://platform.safetycli.com/codebases/nk-uv-demo/findings) dashboard |
+| **CodeQL Analysis** | ![Status](https://img.shields.io/github/actions/workflow/status/ac-willeke/nk-uv-demo/scan-codeql.yml?branch=main&label=&style=flat) | • Python and GitHub Actions security analysis<br>• Results in [Security](https://github.com/ac-willeke/nk-uv-demo/security/code-scanning) tab |
+| **Zizmor Security** | ![Status](https://img.shields.io/github/actions/workflow/status/ac-willeke/nk-uv-demo/scan-zizmor.yml?branch=main&label=&style=flat) | • GitHub Actions security scan<br>• Results in [Security](https://github.com/ac-willeke/nk-uv-demo/security/code-scanning) tab |
+
+In this demo Python packaging and containerization workflows are included. These workflows can be customized or removed based on your specific project requirements. As a minimum we recommend including the CI Python workflow for code quality and testing as well as the Security workflows, CodeQL, Safety, and Zizmor.
 
 ## Features
 
@@ -95,15 +110,6 @@ To contribute:
 3. **Quality**: Ensure code meets our [quality standards](docs/development/code-quality.md)
 4. **Test**: Run tests following our [testing guidelines](docs/development/testing.md)
 5. **Submit**: Create a pull request with clear description
-
-## Project Status
-
-| Check | Status |
-|-------|--------|
-| **Build** | ![CI](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-quality.yml/badge.svg) |
-| **Tests** | ![Tests](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/ci-test-build.yml/badge.svg) |
-| **Security** | ![Security](https://github.com/ac-willeke/nk-uv-demo/actions/workflows/scan-safety.yml/badge.svg) |
-| **Package** | [Test PyPI](https://test.pypi.org/project/nk-uv-demo/) |
 
 ## License
 
