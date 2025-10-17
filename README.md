@@ -1,13 +1,18 @@
-# Naturkart uv demo - Python DevOps practices
+# UV demo - Python DevOps practices
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![TestPyPI](https://img.shields.io/badge/TestPyPI-latest-blue)](https://test.pypi.org/project/nk-uv-demo/) [![Coverage](https://codecov.io/gh/ac-willeke/nk-uv-demo/branch/main/graph/badge.svg)](https://codecov.io/gh/ac-willeke/nk-uv-demo) [![Safety](https://img.shields.io/badge/Safety-Dashboard-blue)](https://platform.safetycli.com/codebases/nk-uv-demo/findings)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TestPyPI](https://img.shields.io/badge/TestPyPI-latest-blue)](https://test.pypi.org/project/nk-uv-demo/)
-[![Coverage](https://codecov.io/gh/ac-willeke/nk-uv-demo/branch/main/graph/badge.svg)](https://codecov.io/gh/ac-willeke/nk-uv-demo)
-[![Safety](https://img.shields.io/badge/Safety-Dashboard-blue)](https://platform.safetycli.com/codebases/nk-uv-demo/findings)
+This repository demonstrates best practices for Python project development and packaging. It showcases how to structure a Python project, manage dependencies with uv, setup security scanning and CI/CD pipelines using GitHub Actions and containerize code with Docker.
 
-A demonstration of Python DevOps practices using automated tools and workflows. This repository shows Python project structure, code quality enforcement, security scanning, and CI/CD pipelines.
+### Features
 
+- **Python Tools**: uv for dependency management, setuptools-scm for dynamic versioning.
+- **GitHub Action** workflows for **CI/CD**:
+    - **Code Quality** with pre-commit, ruff, mypy and pytest.
+    - **Security scanning** with Safety, CodeQL, Dependabot and Zizmor.
+    - **Python** deployment to Test PyPI
+    - **Container** deployment to GitHub Container Registry (ghcr.io).
+- **Developer Tools**: Pre-commit hooks, Development containers, VS Code integration, Taskfile automation
 
 ## Workflow Statuses
 
@@ -21,23 +26,19 @@ A demonstration of Python DevOps practices using automated tools and workflows. 
 
 In this demo Python packaging and containerization workflows are included. These workflows can be customized or removed based on your specific project requirements. As a minimum we recommend including the CI Python workflow for code quality and testing as well as the Security workflows, CodeQL, Safety, and Zizmor.
 
-## Features
-
-- **Python Tooling** - uv for dependency management
-- **Code Quality** - Ruff, mypy, pytest with testing
-- **Security** - Security scanning and monitoring
-- **CI/CD Pipeline** - Automated testing, building, and deployment
-- **Developer Tools** - Pre-commit hooks, VS Code integration, Taskfile automation
-- **Documentation** - Guides and implementation details
-
 ## Quick Start
 
 ### Prerequisites
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) - Python package manager
-- [Task](https://taskfile.dev/installation/) - Task runner (optional)
-- [Git](https://git-scm.com/) and [GitHub](https://github.com/) account
+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Git](https://git-scm.com/), [GitHub](https://github.com/) account, and [GitHub CLI](https://cli.github.com/)
+- [Task](https://taskfile.dev/installation/)
+- [Docker](https://docs.docker.com/engine/install/) (optional)
+- [VS Code](https://code.visualstudio.com/) (optional)
 
 ### Setup
+
+Task is used to automate common development tasks *(see [Taskfile.yml](Taskfile.yml))*. To setup the project without Task you can follow the instructions in the [Installation Guide](docs/getting-started/installation.md).
 
 ```bash
 # Clone the repository
@@ -50,27 +51,49 @@ task dev-setup
 # Test the application
 task run
 # → "Hello from nk-uv-demo!"
+# → "Version: xxxx"
 
 # See all available commands
 task --list
 ```
 
+### Contributing
+
+To contribute:
+
+1. **Setup**: Follow the Setup instructions above
+2. **Develop**:
+    - Create a branch for your feature or bugfix
+    - Make your changes
+    - Ensure code meets the quality standards by running `task check`
+3. **Integrate**:
+    - Check that all ci-tests pass locally with `task ci-local`
+    - Push your branch to GitHub
+    - Create a pull request against the `develop` branch
+    - Await review and merge, your branch will be automatically deleted after merging.
+4. **Deploy**:
+    - Create a git tag for releases (e.g., `v0.1.0`) using `task tag`
+    - Create a PR from `develop` to `main` to deploy the new release
+    - Once merged to `main`, the CD workflows are triggered.
+        - CD Python automatically builds and publishes the package to Test PyPI
+        - CD Docker builds and pushes the container image to GitHub Container Registry
+    - **NOTE**: ensure to merge back `main` into `develop` after releases to keep branches in sync.
+
+
+
+
+
 ### Key Commands
 
 ```bash
-task check            # Run all quality checks
-task test-html        # Run tests with coverage
+task check            # Run all quality checks (ruff, mypy, pytest, deptry)
+task format lint-fix  # Format and lint code with ruff
+task security         # Run security scans (safety, zizmor)
 task build            # Build Python package
+task tag              # Prepare a new release (create git tag)
 ```
 
 For complete command reference, see [Command Cheatsheet](docs/command-cheatsheet.md).
-
-## Tools Included
-
-- **Code Quality:** Ruff (linting/formatting), mypy (type checking), pytest (testing)
-- **Security:** Safety, CodeQL, Dependabot, Zizmor
-- **CI/CD:** GitHub Actions workflows, automated Test PyPI publishing
-- **Developer Tools:** Pre-commit hooks, VS Code integration, Taskfile automation
 
 ## Documentation
 
@@ -92,32 +115,15 @@ Documentation is available in the [`docs/`](docs/) directory:
 - **[Command Cheatsheet](docs/command-cheatsheet.md)** - All commands organized by tool
 - **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 
-## Use Cases
+## Acknowledgements
 
-This repository serves as:
+This demo project leverages the following tools and best practices from the Python and DevOps communities:
 
-- **Project Template** - Starting point for new Python projects
-- **Learning Resource** - Study Python DevOps practices
-- **Reference Implementation** - See how tools integrate in practice
-- **Best Practices Guide** - Follow established patterns and workflows
-
-## Contributing
-
-To contribute:
-
-1. **Setup**: Follow the [Installation Guide](docs/getting-started/installation.md)
-2. **Develop**: Read the [Development Overview](docs/development/README.md)
-3. **Quality**: Ensure code meets our [quality standards](docs/development/code-quality.md)
-4. **Test**: Run tests following our [testing guidelines](docs/development/testing.md)
-5. **Submit**: Create a pull request with clear description
+- **Development practices** inspired by Eric Riddochs course [Taking Python to Production](https://www.udemy.com/course/setting-up-the-linux-terminal-for-software-development/) and Marvelous MLOps course [MLOps with Databricks: Free Edition](https://www.youtube.com/results?search_query=marvelous+mlops).
+- **Docker setup** based on astral-sh Docker example [astral-sh/uv-docker-example](https://github.com/astral-sh/uv-docker-example)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-**Getting started:** [Installation Guide](docs/getting-started/installation.md)
-**Commands:** [Command Cheatsheet](docs/command-cheatsheet.md)
-**Need help:** [Troubleshooting](docs/troubleshooting.md)
-**Contributing:** [Development Guide](docs/development.md)

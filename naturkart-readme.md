@@ -1,24 +1,13 @@
 # Naturkart uv demo - Python DevOps best practices
 
-This repository demonstrates best practices for Python project development and packaging. It showcases how to structure a Python project, manage dependencies with uv, implement CI/CD pipelines using GitHub Actions, and containerize code with Docker.
+This repository demonstrates best practices for Python project development and packaging. It showcases how to structure a Python project, manage dependencies with uv, setup security scanning and CI/CD pipelines using GitHub Actions and containerize code with Docker.
 
 ## Checklist
 
 - [x] Open-source **license** (MIT)
 - [x] Repo **naming convention** (`nk-<name>`, `nkf-<name>`, etc.)
 - [x] GitHub Action workflows for **CI/CD** (testing, security, deployment)
-- [x] **Code quality** tools (Ruff, mypy, pytest, pre-commit)
-- [x] **Security scanning** (Dependabot, CodeQL, Safety, Zizmor)
-- [x] **Package deployment** to Test PyPI
-- [x] **Dynamic versioning** with setuptools-scm
 
-## Requirements
-
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [GitHub](https://github.com/)
-- [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [Task](https://taskfile.dev/installation/) (optional, for easier development workflow)
-- [Docker](https://docs.docker.com/engine/install/) (optional)
-- [VS Code](https://code.visualstudio.com/) (optional)
 
 ## Quick Start with Taskfile (Recommended)
 
