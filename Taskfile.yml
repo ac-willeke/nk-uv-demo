@@ -20,6 +20,15 @@ tasks:
     - test -f .git/hooks/pre-commit
 
   # Code Quality
+  pre-commit:
+    desc: Run pre-commit hooks on all files
+    cmds:
+    - uv run pre-commit run --all-files
+
+  check:
+    desc: Run all code quality checks
+    deps: [lint, typecheck, test-cov, deps-check]
+
   format:
     desc: Format code with Ruff
     cmds:
@@ -56,12 +65,6 @@ tasks:
     cmds:
     - uv run pytest --cov
 
-  test-html:
-    desc: Run tests with HTML coverage report
-    cmds:
-    - uv run pytest --cov --cov-report=html
-    - echo "Coverage report generated in htmlcov/index.html"
-
   # Security
   security:
     desc: Run security scans
@@ -78,21 +81,6 @@ tasks:
     cmds:
     - zizmor .github/workflows/
     ignore_error: true
-
-  # Code Quality Suite
-  check:
-    desc: Run all code quality checks
-    deps: [lint, typecheck, test-cov, deps-check]
-
-  pre-commit:
-    desc: Run pre-commit hooks on all files
-    cmds:
-    - uv run pre-commit run --all-files
-
-  pre-commit-update:
-    desc: Update pre-commit hooks to latest versions
-    cmds:
-    - uv run pre-commit autoupdate
 
   # Build and Release
   build:
@@ -122,17 +110,7 @@ tasks:
     - echo "Development environment ready!"
     - echo "Try - task run"
 
-  notebook:
-    desc: Start Jupyter notebook server
-    cmds:
-    - uv run jupyter notebook notebooks/
-
   # Version Management
-  version:
-    desc: Show current version (dynamic versioning)
-    cmds:
-    - python -c "from importlib.metadata import version; print(version('{{.PROJECT_NAME}}'))"
-
   tag:
     desc: 'Create and push a new version tag (usage: task tag VERSION=v1.0.0)'
     cmds:
@@ -148,20 +126,6 @@ tasks:
     deps: [pre-commit, test-cov, security]
     cmds:
     - echo "Local CI simulation complete!"
-
-  # Docker (if needed)
-  docker-build:
-    desc: Build Docker image
-    cmds:
-    - docker build -t {{.PROJECT_NAME}}:latest .
-    status:
-    - test -f Dockerfile
-
-  docker-run:
-    desc: Run Docker container
-    deps: [docker-build]
-    cmds:
-    - docker run --rm {{.PROJECT_NAME}}:latest
 
   # Help
   default:
@@ -186,7 +150,6 @@ tasks:
       echo ""
       echo "  Testing:"
       echo "    task test         # Run tests"
-      echo "    task test-html    # Tests with HTML coverage"
       echo ""
       echo "  Release:"
       echo "    task build        # Build package"
